@@ -6,8 +6,11 @@ pkgs.mkShell {
 													streamlit
 													plotly
 		]))
+			# pytest
 			pyright
 			ruff
+			docker-language-server
+			docker-compose-language-service
 	];
 
 	shellHook = ''

@@ -14,7 +14,7 @@ def get_phase_menstruelle(jour_debut: datetime.date, duree_cycle: int):
 
     if jour_cycle <= 5:
         return "menstruelle"
-    elif jour_cycle <= jour_ovulation:
+    elif jour_cycle < jour_ovulation:
         return "folliculaire"
     elif jour_cycle == jour_ovulation:
         return "ovulation"
