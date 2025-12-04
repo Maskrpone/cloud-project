@@ -1,1 +1,12 @@
+# Python / terraform cache
 __pycache__/*
+.terraform/*
+*.tfstate
+*.tfstate.backup
+
+# Secrets
+*.tfvars
+.env
+
+# Logs de crash
+crash.log
