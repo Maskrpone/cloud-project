@@ -40,7 +40,13 @@ resource "github_branch_protection" "main" {
 resource "github_branch_protection" "dev" {
   repository_id = github_repository.repo.node_id
   pattern       = "dev"
+
   enforce_admins = true
+
+  required_status_checks {
+    strict = true # Force la branche features-* à être à jour avec la branche dev 
+    contexts = []
+  }
 
   required_pull_request_reviews {
     dismiss_stale_reviews           = true
