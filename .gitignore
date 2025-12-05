@@ -12,6 +12,6 @@ __pycache__/*
 crash.log
 
 # Nix stuff (Hippolyte)
-flake.nix
-shell.nix
-flake.lock
+# flake.nix
+# shell.nix
+# flake.lock
