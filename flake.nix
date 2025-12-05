@@ -11,7 +11,7 @@
 		let
 		  pkgs = import nixpkgs { 
 				inherit system; 
-				nixpkgs.config.allowUnfree = true;
+				config.allowUnfree = true;
 			};
 		in {
 			devShells.default = pkgs.callPackage ./shell.nix { inherit pkgs; };
