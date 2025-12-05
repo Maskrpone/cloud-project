@@ -11,6 +11,9 @@ pkgs.mkShell {
 			ruff
 			docker-language-server
 			docker-compose-language-service
+
+			terrafom
+			terraform-ls
 	];
 
 	shellHook = ''

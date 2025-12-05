@@ -9,7 +9,10 @@
 	outputs = {nixpkgs, flake-utils, ...}:
 	flake-utils.lib.eachDefaultSystem (system:
 		let
-		  pkgs = import nixpkgs { inherit system; };
+			pkgs = import nixpkgs { 
+				inherit system;
+				nixpkgs.config.allowUnfree = true;
+			};
 		in {
 			devShells.default = pkgs.callPackage ./shell.nix { inherit pkgs; };
 		});

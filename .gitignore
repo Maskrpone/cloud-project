@@ -10,3 +10,8 @@ __pycache__/*
 
 # Logs de crash
 crash.log
+
+# Nix stuff (Hippolyte)
+flake.nix
+shell.nix
+flake.lock
