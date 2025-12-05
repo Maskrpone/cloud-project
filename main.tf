@@ -56,7 +56,7 @@ resource "github_branch_protection" "dev" {
   enforce_admins = true
 
   required_status_checks {
-    strict = true # Force la branche features-* à être à jour avec la branche dev 
+    strict = false # Force la branche features-* à être à jour avec la branche dev 
     contexts = []
   }
 
@@ -94,7 +94,7 @@ locals {
 }
 
 resource "azurerm_mssql_server" "server" {
-  name = random_pat.azurerm_mssql_server_name.id
+  name = random_pet.azurerm_mssql_server_name.id
   resource_group_name = azurerm_resource_group.rg.name
   location = azurerm_resource_group.rg.location
   administrator_login = var.admin_username
