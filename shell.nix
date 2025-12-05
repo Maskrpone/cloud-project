@@ -5,10 +5,14 @@ pkgs.mkShell {
 													python-lsp-server
 													streamlit
 													plotly
+													ipython
+													jupyter
+													openpyxl
 		]))
 			# pytest
 			pyright
 			ruff
+
 			docker-language-server
 			docker-compose-language-service
 
