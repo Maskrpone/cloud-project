@@ -1,9 +1,24 @@
 import pandas as pd
 from io import BytesIO
 import requests
+import re
+import unicodedata
+import os
+from sqlalchemy import create_engine
 
 DATASET_URL = "https://web.archive.org/web/20240423194012/https://naehrwertdaten.ch/wp-content/uploads/2023/08/Base_de_donnees_suisse_des_valeurs_nutritives.xlsx"  # web archive to have a fix URL
 
+CONVERSION_FACTORS = {"g": 1, "mg": 0.001, "kj": 1000, "µg": 0.000001, "kcal": 1000}
+
+USERNAME = os.environ.get("TF_VAR_admin_username")
+PASSWORD = os.environ.get("TF_VAR_admin_password")
+SERVER = os.environ.get("TF_VAR_sql_server_name")
+DATABASE = "cloud-project-db"
+DRIVER = "{ODBC Driver 17 for SQL Server}"
+
+CONN_STR = f"mssql+pyodb://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver={DRIVER}"
+
+engine = create_engine(CONN_STR)
 
 def fetch_data(URL):
     try:
@@ -18,6 +33,11 @@ def fetch_data(URL):
         return
 
 
+def remove_accents(text):
+    normalized_text = unicodedata.normalize("NFKD", text)
+    return normalized_text.encode("ascii", "ignore").decode("utf-8")
+
+
 def clean_data(df: pd.DataFrame):
     df = df.drop_duplicates()
     df = df.drop(columns=["ID V 4.0", "ID SwissFIR", "Densité", "Entrée modifiée"])
@@ -27,11 +47,35 @@ def clean_data(df: pd.DataFrame):
 
     double_parenthesis_pattern = r"\s*\([^)]+\)(?=\s*\([^)]+\))"
     df.columns = df.columns.str.replace(double_parenthesis_pattern, "", regex=True)
+
     df.columns = [
         col.strip().replace(",", "").replace(" ", "_").lower() for col in df.columns
     ]
     return df
 
-raw_data = fetch_data(DATASET_URL)
+
+def create_measures_table(df: pd.DataFrame):
+    measures = []
+    columns = df.columns
+    for col in columns:
+        match = re.search(r"\((.*?)\)", col)
+        if match:
+            measures.append(
+                {
+                    "name": re.sub(r"\((.*?)\)", "", col).strip("_"),
+                    "unit": match.group(1),
+                    "conversion": CONVERSION_FACTORS[match.group(1)],
+                }
+            )
+
+    return pd.DataFrame(measures)
+
+
+raw_data = pd.read_excel("swiss_data.xlsx", engine="openpyxl", skiprows=2)
 data = clean_data(raw_data)
-print(raw_data.columns)
+measures_table = create_measures_table(data)
+data.columns = [re.sub(r"\((.*?)\)", "", col).strip("_") for col in data.columns]
+
+measures_table_name = "measures_table"
+measures_table.to_sql(measures_table_name, con=engine, if_exists='replace', index=False)
+

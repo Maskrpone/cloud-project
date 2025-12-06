@@ -8,6 +8,9 @@ pkgs.mkShell {
 													ipython
 													jupyter
 													openpyxl
+													pip
+													unicodedata2
+													sqlalchemy
 		]))
 			# pytest
 			pyright
