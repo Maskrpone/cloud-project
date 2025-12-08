@@ -15,7 +15,7 @@ resource "github_repository" "repo" {
 	name = var.repo_name
 	description = "Cloud project"
 	visibility = "public"
-	auto_init = true
+	auto_init = false 
 }
 
 # Create the development branch from main
@@ -44,7 +44,7 @@ resource "github_branch_protection" "dev" {
   enforce_admins = true
 
   required_status_checks {
-    strict = true # Force la branche features-* à être à jour avec la branche dev 
+    strict = false # Force la branche features-* à être à jour avec la branche dev 
     contexts = []
   }
 
@@ -53,3 +53,4 @@ resource "github_branch_protection" "dev" {
     required_approving_review_count = 0 # Allows merge without review 
   }
 }
+
