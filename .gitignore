@@ -16,6 +16,6 @@ __pycache__/*
 crash.log
 
 .ipynb_checkpoints/*
-*/.virtual_documents/*
+.virtual_documents/*
 
 swiss_data.xlsx
