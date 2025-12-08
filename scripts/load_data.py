@@ -83,10 +83,16 @@ def create_measures_table(df: pd.DataFrame):
 
     return pd.DataFrame(measures)
 
-raw_data = pd.read_excel("../swiss_data.xlsx", engine="openpyxl", skiprows=2)
-data = clean_data(raw_data)
-measures_table = create_measures_table(data)
-data.columns = [re.sub(r"\((.*?)\)", "", col).strip("_") for col in data.columns]
+def create_tables(df: pd.DataFrame):
+    data = clean_data(df)
+    measures_table = create_measures_table(data)
+    data.columns = [re.sub(r"\((.*?)\)", "", col).strip("_") for col in data.columns]
 
-measures_table_name = "measures_table"
-measures_table.to_sql(measures_table_name, con=engine, if_exists="replace", index=False)
+    measures_table_name = "measures_table"
+    food_table_name = "foods_table"
+    measures_table.to_sql(measures_table_name, con=engine, if_exists="replace", index=False)
+    data.to_sql(food_table_name, con=engine, if_exists="replace", index=False)
+
+if __name__ == "__main__":
+    df = fetch_data(DATASET_URL)
+    create_tables(df)
