@@ -11,7 +11,15 @@ pkgs.mkShell {
 													pip
 													unicodedata2
 													sqlalchemy
+													pyodbc
 		]))
+
+			# Driver for mssql
+			unixODBCDrivers.msodbcsql18		
+			unixODBCDrivers.msodbcsql17
+			unixODBC
+			openssl
+
 			# pytest
 			pyright
 			ruff

@@ -14,11 +14,23 @@ USERNAME = os.environ.get("TF_VAR_admin_username")
 PASSWORD = os.environ.get("TF_VAR_admin_password")
 SERVER = os.environ.get("TF_VAR_sql_server_name")
 DATABASE = "cloud-project-db"
-DRIVER = "{ODBC Driver 17 for SQL Server}"
+DRIVER = "{ODBC Driver 18 for SQL Server}"
 
-CONN_STR = f"mssql+pyodb://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver={DRIVER}"
+DRIVER_OPTIONS = (
+    f"DRIVER={DRIVER};"
+    f"SERVER={SERVER}.database.windows.net;"
+    f"DATABASE={DATABASE};"
+    f"UID={USERNAME};"
+    f"PWD={PASSWORD};"
+    "Encrypt=yes;"
+    "TrustServerCertificate=no;" 
+)
+
+CONN_STR = f"mssql+pyodbc://?odbc_connect={DRIVER_OPTIONS}"
+print(f"Connection String being used: {CONN_STR}")
 
 engine = create_engine(CONN_STR)
+
 
 def fetch_data(URL):
     try:
@@ -56,6 +68,7 @@ def clean_data(df: pd.DataFrame):
 
 def create_measures_table(df: pd.DataFrame):
     measures = []
+    df.columns = [remove_accents(col) for col in df.columns]
     columns = df.columns
     for col in columns:
         match = re.search(r"\((.*?)\)", col)
@@ -70,12 +83,10 @@ def create_measures_table(df: pd.DataFrame):
 
     return pd.DataFrame(measures)
 
-
-raw_data = pd.read_excel("swiss_data.xlsx", engine="openpyxl", skiprows=2)
+raw_data = pd.read_excel("../swiss_data.xlsx", engine="openpyxl", skiprows=2)
 data = clean_data(raw_data)
 measures_table = create_measures_table(data)
 data.columns = [re.sub(r"\((.*?)\)", "", col).strip("_") for col in data.columns]
 
 measures_table_name = "measures_table"
-measures_table.to_sql(measures_table_name, con=engine, if_exists='replace', index=False)
-
+measures_table.to_sql(measures_table_name, con=engine, if_exists="replace", index=False)
