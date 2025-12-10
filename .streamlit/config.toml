@@ -1,0 +1,7 @@
+[theme]
+base="light"
+secondaryBackgroundColor="#bbc7a4" 
+
+[theme.sidebar]
+backgroundColor="aliceBlue"
+secondaryBackgroundColor="skyBlue"
