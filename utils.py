@@ -18,5 +18,3 @@ def get_phase_menstruelle(jour_debut: datetime.date, duree_cycle: int) -> str:
         return "ovulation"
     else:
         return "lutéale"
-
-

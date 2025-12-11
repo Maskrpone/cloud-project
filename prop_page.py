@@ -20,7 +20,7 @@ def prop_page():
     st.logo("images/logo_cloud.png", size="large")
     st.header("Vous êtes donc...")
 
-# Infos de la session utilisateur
+    # Infos de la session utilisateur
     user_info = get_user_info(saison, phase)
 
     if user_info != "ERROR":
