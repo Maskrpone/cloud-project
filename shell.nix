@@ -5,19 +5,26 @@ pkgs.mkShell {
 													python-lsp-server
 													streamlit
 													plotly
-													sqlalchemy
+													ipython
+													jupyter
+													openpyxl
 													pip
-													flake8
-													pytest
+													unicodedata2
+													sqlalchemy
+													pyodbc
 		]))
 
+			# Driver for mssql
+			unixODBCDrivers.msodbcsql18		
+			unixODBCDrivers.msodbcsql17
+			unixODBC
+			openssl
+
+			# pytest
 			pyright
 			ruff
 
-			yamlfmt
-			yaml-language-server
-
-			dockerfile-language-server
+			docker-language-server
 			docker-compose-language-service
 
 			terraform-ls

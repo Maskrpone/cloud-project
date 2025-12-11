@@ -17,6 +17,5 @@ crash.log
 
 .ipynb_checkpoints/*
 .virtual_documents/*
-.streamlit/*
 
 swiss_data.xlsx
