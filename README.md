@@ -34,8 +34,3 @@ The entire infrastructure was delcared as code using Terraform (more on that [he
 Regarding the deployment, it is the very same process as for the API, except for the name of the container, which would be `cloud-streamlit` instead of `api-container`.
 
 ### Preview
-
-![Screenshot of the phase choice](screenshots/choix_phase.png)
-![Screenshot of the determination function](screenshots/determination_phase.png)
-![Screenshot of the advised foods](screenshots/aliments_disponibles.png)
-![Screenshot of the advised recipes](screenshots/recettes_trouvees.png)
