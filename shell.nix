@@ -13,6 +13,7 @@ pkgs.mkShell {
 													sqlalchemy
 													pyodbc
 													flake8
+													pytest
 		]))
 
 			# Driver for mssql
