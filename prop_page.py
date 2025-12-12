@@ -1,5 +1,7 @@
 import streamlit as st
-from utils import get_foods_by_nutrient, pick_random_entries
+import requests
+from bs4 import BeautifulSoup
+from utils import get_foods_by_nutrient, pick_random_entries, get_recipes
 
 # st.set_page_config(
 #     page_title="Propositions", page_icon=":stew:", initial_sidebar_state="collapsed"
@@ -15,6 +17,27 @@ def get_user_info(saison, phase):
         return f"Au mois de **{saison.capitalize()}** et vous êtes dans la phase **{phase}** de votre cycle !"
     else:
         return "ERROR"
+
+
+def recipe_card(title: str, link: str) -> None:
+    url = f"https://www.marmiton.org{link}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        image = soup.find("img", id="recipe-media-viewer-main-picture")
+        image_alt = soup.find("img", id="recipe-media-viewer-thumbnail-0")
+        print(image)
+        if image:
+            st.image(image.get("data-src"))
+        elif image_alt:
+            st.image(image_alt.get("data-src"))
+        else:
+            st.image(
+                "https://assets.afcdn.com/recipe/20100101/recipe_default_img_placeholder_w500h500c1.jpg"
+            )
+        # col1, col2, col3 = st.columns(3)
+        # with col1, col2:
+        st.link_button(f"{title}", url, use_container_width=True)
 
 
 def prop_page():
@@ -46,6 +69,15 @@ def prop_page():
     # Liste des plats
     with st.expander("Plats conseillés 🍲", expanded=True):
         st.write("""liste de plats""")
+        if entries and len(entries) > 0:
+            recipes = get_recipes(entries)
+            cols = st.columns(3, width="stretch")
+            for i, (title, link) in enumerate(recipes.items()):
+                col = cols[i % 3]
+                with col:
+                    recipe_card(title, link)
+        else:
+            st.write("Pas de recettes pour le moment.")
 
 
 # Navigation
