@@ -1,2 +1,2 @@
-streamlit==1.51.0
+streamlit
 pytest==8.4.2

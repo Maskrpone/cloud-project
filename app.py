@@ -32,10 +32,10 @@ def home_page():
         "**Pourriez-vous répondre à quelques questions afin que nous puissions au mieux vous conseiller ?**"
     )
 
-    with st.expander("**Menstruation**", expanded=True):
+    with st.expander("**Cycle**", expanded=True):
         phase = st.selectbox(
             "**Dans quelle phase de votre cycle êtes-vous ?**",
-            ("Menstruation", "Folliculaire", "Ovulation", "Lutéale", "Je ne sais pas"),
+            ("Menstruelle", "Folliculaire", "Ovulatoire", "Lutéale", "Je ne sais pas"),
         )
 
     st.session_state["user_config"]["phase_menstruelle"] = phase.lower()

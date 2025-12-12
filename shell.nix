@@ -12,6 +12,7 @@ pkgs.mkShell {
 													unicodedata2
 													sqlalchemy
 													pyodbc
+													flake8
 		]))
 
 			# Driver for mssql
