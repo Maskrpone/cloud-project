@@ -3,6 +3,8 @@ import random
 import requests
 import os
 import unicodedata
+from bs4 import BeautifulSoup
+import re
 
 
 def get_phase_menstruelle(jour_debut: datetime.date, duree_cycle: int) -> str:
@@ -34,9 +36,6 @@ def get_foods_by_nutrient(phase: str, percentage: float = 0.05):
     API_URL = os.getenv("API_URL")
     FULL_URL = f"{API_URL}/food-by-phase/"
     params = {"phase": phase_cleaned, "percentage": percentage}
-    # req = requests.Request("GET", FULL_URL, params=params)
-    # prepared_req = req.prepare()
-    # print(f"URL CONNEXION : {prepared_req.url}")
     try:
         response = requests.get(FULL_URL, params=params)
         response.raise_for_status()
@@ -60,3 +59,26 @@ def pick_random_entries(entries):
             random_food_table.extend(food_picked)
 
     return random_food_table
+
+
+def get_recipes(entries: list[str]):
+    search_url = "https://www.marmiton.org/recettes/recherche.aspx?aqt=plat+"
+    sample = min(12, len(entries))
+    food_picked = random.sample(entries, k=sample)
+
+    recipes = {}
+    for food in food_picked:
+        food = food.replace(" ", "+").lower()
+        response = requests.get(f"{search_url}{food}")
+        if response.status_code == 200:
+            html_content = response.text
+            soup = BeautifulSoup(html_content, "html.parser")
+            pattern = re.compile(r"^/recettes/")
+            recipe = soup.find("a", attrs={"href": pattern})
+            if recipe:
+                recipes[recipe.get_text(strip=True)] = recipe.get("href")
+
+        else:
+            print(f"Response was : {response.status_code}")
+
+    return recipes
