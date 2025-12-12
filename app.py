@@ -64,16 +64,17 @@ def home_page():
                 )
             )
 
-    with st.expander("**Saison**"):
-        date = datetime.date.today()
-        st.info(f"Nous sommes aujourd'hui en **{all_months[date.month - 1]}**")
-        wanted_season = st.selectbox(
-            "Selectionnez le mois que vous voulez analyser",
-            (month for month in all_months),
-            index=(date.month - 1),
-        )
-
-        st.session_state["user_config"]["saison"] = wanted_season.lower()
+        # with st.expander("**Saison**"):
+        #     date = datetime.date.today()
+        #     st.info(f"Nous sommes aujourd'hui en **{all_months[date.month - 1]}**")
+        #     wanted_season = st.selectbox(
+        #         "Selectionnez le mois que vous voulez analyser",
+        #         (month for month in all_months),
+        #         index=(date.month - 1),
+        #     )
+        #
+    wanted_season = all_months[datetime.date.today().month - 1]
+    st.session_state["user_config"]["saison"] = wanted_season.lower()
 
     saved = st.button("Sauvegarder")
 
